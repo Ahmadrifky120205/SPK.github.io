@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPK - Sistem Pendukung Keputusan</title>
+  <link rel="stylesheet" href="spk.css">
+</head>
+<body>
+<header>
+  <div class="top-bar">
+    <a href="./index.html" class="home-button"><img src="1Sistem Pengambilan Keputusan.png" alt="logo"></a>
+    <div class="metode-button" onclick="toggleMetodeMenu()">metode</div>
+  </div>
+  <div class="popup-menu" id="metodeMenu">
+    <ul>
+      <li><a href="saw/Metode SAW.html">🔸 SAW (Simple Additive Weighting)</a></li>
+      <li><a href="../FINAL SPK/ahp/Metode Ahp.html">🔸 AHP (Analytic Hierarchy Process)</a></li>
+      <li><a href="../FINAL SPK/TOPSIS/topsis.html">🔸 TOPSIS</a></li>
+      <li><a href="../FINAL SPK/wp/wp.html">🔸 WP (Weighted Product)</a></li>
+      <li><a href="../FINAL SPK/kalkulator/kalkulator.html">🔸 kalkulator sintefic</a></li>
+    </ul>
+  </div>
+  <div class="center-logo">
+    <img src="Sistem Pengambilan Keputusan.png" alt="Logo SPK" />
+  </div>
+</header>
+
+<main>
+  <div class="box">
+    <h3>Pilih yang mana? Mana yang paling baik? Harus mulai dari mana?</h3>
+    <p>
+      Kami bantu jawab semua itu lewat sistem pendukung keputusan canggih berbasis web.
+      <br>🔺 Mulai input data kamu dan biarkan sistem bekerja!
+    </p>
+  </div>
+
+  <div class="box">
+    <h3>Apa Itu SPK (Sistem Pendukung Keputusan)?</h3>
+    <p>
+      Sistem Pendukung Keputusan (SPK) adalah sistem berbasis komputer yang dirancang untuk membantu seseorang atau organisasi dalam mengambil keputusan yang terbaik, tepat, dan cepat, terutama ketika berhadapan dengan berbagai pilihan dan kriteria yang kompleks.
+    </p>
+  </div>
+
+  <div class="box">
+    <h3>Mengapa SPK Penting?</h3>
+    <ul>
+      <li>📌 Membantu memilih pilihan terbaik dari banyak alternatif</li>
+      <li>📌 Cocok untuk keputusan bisnis, akademik, dan manajemen</li>
+      <li>📌 Membuat proses lebih logis dan objektif</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>Kelebihan SPK:</h3>
+    <ul>
+      <li>✅ Objektif: berdasarkan data dan logika</li>
+      <li>✅ Cepat & efisien: sistem langsung memberi hasil</li>
+      <li>✅ Fleksibel: dapat digunakan untuk berbagai kebutuhan</li>
+      <li>✅ Akurat: memakai metode ilmiah yang telah diuji</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>Kekurangan SPK (Sistem Pendukung Keputusan):</h3>
+    <ul>
+      <li>❌ Bergantung pada data yang dimasukkan</li>
+      <li>❌ Tidak bisa menggantikan intuisi dan pengalaman</li>
+      <li>❌ Pemilihan metode harus tepat</li>
+      <li>❌ Butuh pemahaman dasar untuk digunakan</li>
+      <li>❌ Kurang cocok untuk keputusan yang sangat subjektif</li>
+    </ul>
+  </div>
+</main>
+
+<div class="wave">
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#d35400" d="M0,64L80,58.7C160,53,320,43,480,53.3C640,64,800,96,960,96C1120,96,1280,64,1360,48L1440,32L1440,160L1360,160C1280,160,1120,160,960,160C800,160,640,160,480,160C320,160,160,160,80,160L0,160Z"></path>
+  </svg>
+</div>
+
+<footer>
+  © 2025 Ahmad Rifky • <a href="#" style="color: #fff;">Tentang admin</a>
+  <div class="sosial">
+    Sosial Media :
+    <a href="https://www.instagram.com/rifky_120205/" target="_blank">Instagram</a>
+    <a href="https://facebook.com" target="_blank">Facebook</a>
+  </div>
+
+  <audio autoplay loop>
+    <source src="lagu.mp3" type="audio/mpeg">
+  </audio>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4uiamMtux6mN?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></iframe>
+</footer>
+
+<script>
+  function toggleMetodeMenu() {
+    const menu = document.getElementById("metodeMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  }
+
+  window.onclick = function(e) {
+    const menu = document.getElementById("metodeMenu");
+    if (!e.target.matches('.metode-button') && !e.target.closest('#metodeMenu')) {
+      menu.style.display = "none";
+    }
+  }
+</script>
+
+</body>
+</html>

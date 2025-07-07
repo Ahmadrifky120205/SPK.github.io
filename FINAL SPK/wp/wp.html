@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPK - Metode TOPSIS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wp.css">
+</head>
+<body>
+   <body>
+    <header>
+        <div class="top-bar">
+            <a href="../index.html" class="home-button">
+                <img src="../1Sistem Pengambilan Keputusan.png" alt="logo">
+            </a>
+            <div class="metode-button" onclick="toggleMetodeMenu()">Metode</div>
+        </div>
+        <div class="popup-menu" id="metodeMenu">
+            <ul>
+                <li><a href="../saw/Metode SAW.html">🔸 SAW (Simple Additive Weighting)</a></li>
+                <li><a href="../ahp/Metode Ahp.html">🔸 AHP (Analytic Hierarchy Process)</a></li>
+                <li><a href="../TOPSIS/topsis.html">🔸 TOPSIS</a></li>
+                <li><a href="wp/wp.html">🔸 WP (Weighted Product)</a></li>
+                <li><a href="../kalkulator/kalkulator.html">🔸 kalkulator sintefic</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">Kalkulator Metode WP</h1>
+            <p class="mt-2 text-white">Weighted Product</p>
+        </header>
+
+        <main class="space-y-8">
+            <!-- Langkah 1: Masukkan Data Kasus -->
+            <div class="step-card">
+                <h2 class="step-title">Langkah 1: Masukkan Data Kasus</h2>
+                
+                <!-- Kriteria -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">A. Definisikan Kriteria Penilaian</h3>
+                    <div id="criteria-container" class="space-y-2">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                            <div class="md:col-span-4"><input type="text" placeholder="Nama Kriteria (Contoh: Harga)" class="w-full p-2 border rounded-md" value="Harga"></div>
+                            <div class="md:col-span-3"><select class="w-full p-2 border rounded-md"><option value="cost">Cost</option><option value="benefit">Benefit</option></select></div>
+                            <div class="md:col-span-4"><input type="number" placeholder="Bobot (1-100)" class="w-full p-2 border rounded-md" value="25"></div>
+                            <div class="md:col-span-1"><button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                            <div class="md:col-span-4"><input type="text" placeholder="Nama Kriteria" class="w-full p-2 border rounded-md" value="Kualitas"></div>
+                            <div class="md:col-span-3"><select class="w-full p-2 border rounded-md"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div>
+                            <div class="md:col-span-4"><input type="number" placeholder="Bobot (1-100)" class="w-full p-2 border rounded-md" value="40"></div>
+                            <div class="md:col-span-1"><button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button></div>
+                        </div>
+                    </div>
+                    <button id="add-criterion" class="mt-3 text-sm bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors">+ Tambah Kriteria</button>
+                </div>
+
+                <!-- Alternatif -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">B. Definisikan Alternatif (Pilihan)</h3>
+                    <div id="alternatives-container" class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Alternatif (Contoh: Laptop A)" class="w-full p-2 border rounded-md" value="Produk A">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Alternatif" class="w-full p-2 border rounded-md" value="Produk B">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Alternatif" class="w-full p-2 border rounded-md" value="Produk C">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                    </div>
+                    <button id="add-alternative" class="mt-3 text-sm bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors">+ Tambah Alternatif</button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button id="generate-matrix" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">Buat Tabel Keputusan</button>
+                </div>
+
+                <div id="matrix-section" class="hidden mt-6">
+                    <h3 class="text-lg font-semibold mb-3">C. Isi Nilai Keputusan</h3>
+                    <p class="text-gray-600 mb-4">Masukkan nilai untuk setiap alternatif berdasarkan kriteria yang ada.</p>
+                    <div id="matrix-container" class="overflow-x-auto"></div>
+                    <div class="mt-6 text-center">
+                         <button id="calculate-wp" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Hitung dengan Metode WP</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Langkah 2: Rincian & Hasil -->
+            <div id="result-card" class="step-card hidden">
+                <h2 class="step-title">Langkah 2: Rincian Perhitungan & Hasil Akhir</h2>
+                
+                <div id="calculation-details-container"></div>
+                
+                <div id="result-section" class="mt-8">
+                    <h3 class="text-xl font-semibold mb-3 border-t pt-4">Tabel Peringkat Akhir</h3>
+                    <table class="min-w-full bg-white border">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-2 px-4 border-b">Peringkat</th>
+                                <th class="py-2 px-4 border-b">Alternatif</th>
+                                <th class="py-2 px-4 border-b">Skor Preferensi (V)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+ 
+    <div class="wave">
+        <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#d35400" d="M0,64L80,58.7C160,53,320,43,480,53.3C640,64,800,96,960,96C1120,96,1280,64,1360,48L1440,32L1440,160L1360,160C1280,160,1120,160,960,160C800,160,640,160,480,160C320,160,160,160,80,160L0,160Z"></path>
+        </svg>
+    </div>
+
+    <footer>
+    © 2025 Ahmad Rifky • <a href="#" style="color: #fff;">Tentang admin</a>
+    <div class="sosial">
+        Sosial Media :
+        <a href="https://instagram.com" target="_blank">📷 Instagram</a>
+        <a href="https://facebook.com" target="_blank">📘 Facebook</a>
+    </div>
+    <audio autoplay loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+    </audio>
+    <div class="mt-4">
+        <iframe style="border-radius:12px; max-width: 660px;" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4uiamMtux6mN?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+    </footer>
+
+    <script>
+        // --- Menu Script ---
+        function toggleMetodeMenu() {
+            const menu = document.getElementById("metodeMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+        window.onclick = function(e) {
+            const menu = document.getElementById("metodeMenu");
+            if (!e.target.matches('.metode-button') && !e.target.closest('#metodeMenu')) {
+                menu.style.display = "none";
+            }
+        }
+
+        // --- WP Calculator Script ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const addCriterionBtn = document.getElementById('add-criterion');
+            const addAlternativeBtn = document.getElementById('add-alternative');
+            const generateMatrixBtn = document.getElementById('generate-matrix');
+            const calculateWpBtn = document.getElementById('calculate-wp');
+            
+            // --- Event Delegation for Remove Buttons ---
+            document.getElementById('criteria-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-btn')) {
+                    e.target.parentElement.remove();
+                }
+            });
+            document.getElementById('alternatives-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-btn')) {
+                    e.target.parentElement.remove();
+                }
+            });
+
+            addCriterionBtn.addEventListener('click', addCriterionRow);
+            addAlternativeBtn.addEventListener('click', addAlternativeRow);
+            generateMatrixBtn.addEventListener('click', handleGenerateMatrix);
+            calculateWpBtn.addEventListener('click', handleCalculateWp);
+
+            function addCriterionRow() {
+                const container = document.getElementById('criteria-container');
+                const div = document.createElement('div');
+                div.className = 'grid grid-cols-1 md:grid-cols-12 gap-2 items-center';
+                div.innerHTML = `
+                    <div class="md:col-span-4"><input type="text" placeholder="Nama Kriteria" class="w-full p-2 border rounded-md"></div>
+                    <div class="md:col-span-3"><select class="w-full p-2 border rounded-md"><option value="benefit">Benefit</option><option value="cost">Cost</option></select></div>
+                    <div class="md:col-span-4"><input type="number" placeholder="Bobot (1-100)" class="w-full p-2 border rounded-md"></div>
+                    <div class="md:col-span-1"><button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button></div>
+                `;
+                container.appendChild(div);
+            }
+
+            function addAlternativeRow() {
+                const container = document.getElementById('alternatives-container');
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                div.innerHTML = `
+                    <input type="text" placeholder="Nama Alternatif" class="w-full p-2 border rounded-md">
+                    <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                `;
+                container.appendChild(div);
+            }
+
+            function generateDecisionMatrixDOM(criteria, alternatives) {
+                let table = `<table id="matrix-table" class="min-w-full border">
+                    <thead class="bg-gray-100"><tr><th class="py-2 px-4 border-b">Alternatif</th>`;
+                criteria.forEach(c => table += `<th class="py-2 px-4 border-b">${c.name}</th>`);
+                table += `</tr></thead><tbody>`;
+                alternatives.forEach(alt => {
+                    table += `<tr><td class="py-2 px-4 border-b font-semibold">${alt}</td>`;
+                    criteria.forEach(() => table += `<td class="p-1 border-b"><input type="number" class="table-input"></td>`);
+                    table += `</tr>`;
+                });
+                table += `</tbody></table>`;
+                document.getElementById('matrix-container').innerHTML = table;
+            }
+
+            function generateReadonlyTable(title, rows, cols, data) {
+                let table = `<div class="calc-step">
+                    <h4 class="font-semibold text-lg">${title}</h4>
+                    <table class="min-w-full border mt-2">
+                    <thead class="bg-gray-100"><tr><th class="py-2 px-4 border-b">Alternatif</th>`;
+                cols.forEach(c => table += `<th class="py-2 px-4 border-b">${c}</th>`);
+                table += `</tr></thead><tbody>`;
+                rows.forEach((rowName, i) => {
+                    table += `<tr><td class="py-2 px-4 border-b font-semibold">${rowName}</td>`;
+                    data[i].forEach(val => table += `<td class="py-2 px-4 border-b text-center">${val}</td>`);
+                    table += `</tr>`;
+                });
+                table += `</tbody></table></div>`;
+                return table;
+            }
+            
+            function handleGenerateMatrix() {
+                const criteria = getCriteriaFromDOM();
+                const alternatives = getAlternativesFromDOM();
+                if (criteria.some(c => !c.name || isNaN(c.weight)) || alternatives.some(a => !a)) {
+                    alert('Harap isi semua nama dan bobot kriteria, serta nama alternatif.');
+                    return;
+                }
+                generateDecisionMatrixDOM(criteria, alternatives);
+                document.getElementById('matrix-section').classList.remove('hidden');
+            }
+
+            function handleCalculateWp() {
+                try {
+                    const criteria = getCriteriaFromDOM();
+                    const alternatives = getAlternativesFromDOM();
+                    const matrix = getMatrixFromDOM();
+
+                    if (matrix.flat().some(val => isNaN(val))) {
+                        alert('Harap isi semua nilai dalam tabel keputusan dengan angka yang valid.');
+                        return;
+                    }
+
+                    // --- 1. Perbaikan Bobot ---
+                    const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
+                    const modifiedWeights = criteria.map(c => {
+                        const normalized = c.weight / totalWeight;
+                        return c.type === 'cost' ? -normalized : normalized;
+                    });
+                    
+                    // --- 2. Menghitung Vektor S ---
+                    const sVectors = matrix.map(row => {
+                        return row.reduce((prod, val, i) => prod * Math.pow(val, modifiedWeights[i]), 1);
+                    });
+
+                    // --- 3. Menghitung Vektor V (Nilai Preferensi) ---
+                    const totalSVector = sVectors.reduce((sum, s) => sum + s, 0);
+                    const scores = sVectors.map(s => totalSVector === 0 ? 0 : s / totalSVector);
+                    
+                    const results = alternatives.map((name, i) => ({ name, score: scores[i] }));
+
+                    // --- Menampilkan Rincian dan Hasil ---
+                    displayCalculationDetails({
+                        criteria,
+                        alternatives,
+                        matrix,
+                        modifiedWeights,
+                        sVectors,
+                        totalSVector,
+                        scores
+                    });
+                    displayResults(results);
+                    document.getElementById('result-card').classList.remove('hidden');
+
+                } catch (error) {
+                    alert('Terjadi kesalahan: ' + error.message);
+                }
+            }
+
+            function getCriteriaFromDOM() {
+                return Array.from(document.getElementById('criteria-container').children).map(div => ({
+                    name: div.querySelector('input[type="text"]').value,
+                    type: div.querySelector('select').value,
+                    weight: parseFloat(div.querySelector('input[type="number"]').value)
+                }));
+            }
+
+            function getAlternativesFromDOM() {
+                return Array.from(document.getElementById('alternatives-container').children).map(div => div.querySelector('input[type="text"]').value);
+            }
+
+            function getMatrixFromDOM() {
+                const rows = Array.from(document.querySelectorAll('#matrix-table tbody tr'));
+                return rows.map(row => Array.from(row.querySelectorAll('input')).map(input => parseFloat(input.value)));
+            }
+
+            function displayCalculationDetails(data) {
+                const { criteria, alternatives, matrix, modifiedWeights, sVectors, totalSVector, scores } = data;
+                const container = document.getElementById('calculation-details-container');
+                
+                let html = `
+                    <div class="calc-step">
+                        <h4 class="font-semibold text-lg">1. Matriks Keputusan (X) dan Bobot (W) yang Telah Diperbaiki</h4>
+                        <p class="text-sm text-gray-600">Bobot dinormalisasi dan diberi nilai negatif untuk kriteria 'Cost'.</p>
+                        <div class="formula">Bobot (W) = [${modifiedWeights.map(w => w.toFixed(4)).join(', ')}]</div>
+                        ${generateReadonlyTable("Matriks Keputusan (X)", alternatives, criteria.map(c => c.name), matrix)}
+                    </div>
+                `;
+
+                html += `
+                    <div class="calc-step">
+                        <h4 class="font-semibold text-lg">2. Perhitungan Vektor S</h4>
+                        <p class="text-sm text-gray-600">Nilai setiap alternatif dipangkatkan dengan bobotnya masing-masing, lalu dikalikan.</p>
+                        <div class="formula">S(i) = &Pi; (Xij ^ Wj)</div>`;
+                sVectors.forEach((s, i) => {
+                    const calcString = matrix[i]
+                        .map((val, j) => `(${val}^${modifiedWeights[j].toFixed(2)})`)
+                        .join(' * ');
+                    html += `<br>S(${alternatives[i]}) = ${calcString} = <strong>${s.toFixed(4)}</strong>`;
+                });
+                html += `</div>`;
+
+                html += `
+                    <div class="calc-step">
+                        <h4 class="font-semibold text-lg">3. Perhitungan Vektor V (Nilai Preferensi)</h4>
+                        <p class="text-sm text-gray-600">Nilai S setiap alternatif dinormalisasi untuk mendapatkan skor akhir.</p>
+                        <div class="formula">V(i) = S(i) / &Sigma;S</div>`;
+                 scores.forEach((v, i) => {
+                    html += `<br>V(${alternatives[i]}) = ${sVectors[i].toFixed(4)} / ${totalSVector.toFixed(4)} = <strong>${v.toFixed(4)}</strong>`;
+                });
+                html += `</div>`;
+
+                container.innerHTML = html;
+            }
+
+            function displayResults(results) {
+                results.sort((a, b) => b.score - a.score);
+                const resultBody = document.getElementById('result-body');
+                resultBody.innerHTML = '';
+                results.forEach((res, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="py-2 px-4 border-b text-center">${index + 1}</td>
+                        <td class="py-2 px-4 border-b">${res.name}</td>
+                        <td class="py-2 px-4 border-b text-center">${res.score.toFixed(4)}</td>
+                    `;
+                    resultBody.appendChild(tr);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPK - Metode AHP (Multi-Konteks)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body and Font Styles from User's CSS */
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #1a1a1a, #f39c12);
+            color: #fff;
+        }
+        .container {
+            color: #1f2937; /* gray-800 */
+        }
+
+        /* Header Styles from User's CSS */
+        header {
+            position: relative;
+            padding: 20px;
+        }
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .home-button img {
+            height: 150px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .metode-button {
+            text-decoration: none;
+            color: orange;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 8px 12px;
+            border: 1px solid orange;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .metode-button:hover {
+            background-color: orange;
+            color: #1a1a1a;
+        }
+        .popup-menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .popup-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+        .popup-menu ul li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 8px 10px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .popup-menu ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Main Content Card Styles */
+        .step-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .table-input {
+            width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; text-align: center;
+        }
+        .info-box {
+            background-color: #e0f2fe; border-left: 4px solid #0ea5e9; color: #0c4a6e;
+        }
+        .calc-step {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        
+        /* Custom styles for AHP table to match the image */
+        .ahp-table th, .ahp-table td {
+            border: 1px solid #9ca3af; /* gray-400 */
+            padding: 0.5rem;
+            text-align: center;
+        }
+        .header-orange { background-color: #fed7aa; } /* orange-200 */
+        .data-green { background-color: #d9f99d; } /* lime-200 */
+        .vector-purple { background-color: #e9d5ff; } /* purple-200 */
+        .summary-table td {
+            padding: 0.5rem 1rem;
+        }
+
+        /* Footer Styles from User's CSS */
+        .wave {
+            position: relative;
+            margin-top: 80px;
+            overflow: hidden;
+            line-height: 0;
+        }
+        .wave svg {
+            display: block;
+            width: 100%;
+            height: 100px;
+        }
+        footer {
+            background-color: #d35400;
+            color: #fff;
+            font-size: 0.9em;
+            text-align: center;
+            padding: 20px;
+        }
+        .sosial {
+            margin-top: 10px;
+        }
+        .sosial a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <a href="../index.html" class="home-button">
+                <img src="../1Sistem Pengambilan Keputusan.png" alt="logo">
+            </a>
+            <div class="metode-button" onclick="toggleMetodeMenu()">Metode</div>
+        </div>
+        <div class="popup-menu" id="metodeMenu">
+            <ul>
+                <li><a href="../saw/Metode SAW.html">🔸 SAW (Simple Additive Weighting)</a></li>
+                <li><a href="Metode Ahp.html">🔸 AHP (Analytic Hierarchy Process)</a></li>
+                <li><a href="../TOPSIS/topsis.html">🔸 TOPSIS</a></li>
+                <li><a href="../wp/wp.html">🔸 WP (Weighted Product)</a></li>
+                <li><a href="../FINAL SPK/kalkulator/kalkulator.html">🔸 kalkulator sintefic</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">Kalkulator Metode AHP (Multi-Konteks)</h1>
+            <p class="mt-2 text-white">Analisis beberapa perbandingan kriteria secara terpisah.</p>
+        </header>
+
+        <main class="space-y-8">
+            <!-- Langkah 1: Masukkan Data Kasus -->
+            <div id="step1-card" class="step-card">
+                <h2 class="step-title">Langkah 1: Definisikan Hirarki Keputusan</h2>
+                
+                <!-- Kriteria -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">A. Definisikan Konteks Perbandingan (Kriteria)</h3>
+                    <div id="criteria-container" class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Kriteria (Contoh: Pendidikan)" class="w-full p-2 border rounded-md" value="Pendidikan">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Kriteria" class="w-full p-2 border rounded-md" value="Pengalaman">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                    </div>
+                    <button id="add-criterion" class="mt-3 text-sm bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors">+ Tambah Kriteria</button>
+                </div>
+
+                <!-- Alternatif -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">B. Definisikan Item yang Dibandingkan (Alternatif)</h3>
+                    <div id="alternatives-container" class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Alternatif (Contoh: Yayu)" class="w-full p-2 border rounded-md" value="Yayu">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="Nama Alternatif" class="w-full p-2 border rounded-md" value="Grace">
+                            <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                        </div>
+                    </div>
+                    <button id="add-alternative" class="mt-3 text-sm bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors">+ Tambah Alternatif</button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button id="start-comparison" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">Mulai Perbandingan</button>
+                </div>
+            </div>
+
+            <!-- Langkah 2: Perbandingan Berpasangan -->
+            <div id="step2-card" class="step-card hidden">
+                <h2 class="step-title">Langkah 2: Lakukan Perbandingan Berpasangan</h2>
+                <div class="info-box p-4 rounded-md">
+                    <p><strong class="font-bold">Petunjuk:</strong> Isi semua matriks di bawah ini. Nilai 1 berarti sama penting/unggul, 9 berarti jauh lebih penting/unggul. Nilai sebaliknya (misal: B vs A) akan terisi otomatis.</p>
+                </div>
+                
+                <div id="comparison-container"></div>
+
+                <div class="mt-6 text-center">
+                     <button id="calculate-ahp" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Lihat Hasil Perhitungan</button>
+                </div>
+            </div>
+
+            <!-- Langkah 3: Rincian & Hasil -->
+            <div id="result-card" class="step-card hidden">
+                <h2 class="step-title">Langkah 3: Rincian Hasil Perbandingan</h2>
+                <div id="calculation-details-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <div class="wave">
+        <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#d35400" d="M0,64L80,58.7C160,53,320,43,480,53.3C640,64,800,96,960,96C1120,96,1280,64,1360,48L1440,32L1440,160L1360,160C1280,160,1120,160,960,160C800,160,640,160,480,160C320,160,160,160,80,160L0,160Z"></path>
+        </svg>
+    </div>
+
+    <footer>
+        © 2025 Ahmad Rifky • <a href="#" style="color: #fff;">Tentang admin</a>
+        <div class="sosial">
+            Sosial Media :
+            <a href="https://instagram.com" target="_blank">📷 Instagram</a>
+            <a href="https://facebook.com" target="_blank">📘 Facebook</a>
+        </div>
+        <div class="mt-4">
+             <iframe style="border-radius:12px; max-width: 660px;" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4uiamMtux6mN?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+    </footer>
+
+    <script>
+        // --- Menu Script ---
+        function toggleMetodeMenu() {
+            const menu = document.getElementById("metodeMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+        window.onclick = function(e) {
+            const menu = document.getElementById("metodeMenu");
+            if (!e.target.matches('.metode-button') && !e.target.closest('#metodeMenu')) {
+                menu.style.display = "none";
+            }
+        }
+
+        // --- AHP Calculator Script ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const appState = {
+                criteria: [],
+                alternatives: []
+            };
+
+            const addCriterionBtn = document.getElementById('add-criterion');
+            const addAlternativeBtn = document.getElementById('add-alternative');
+            const startComparisonBtn = document.getElementById('start-comparison');
+            const calculateAhpBtn = document.getElementById('calculate-ahp');
+            
+            document.getElementById('criteria-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-btn')) {
+                    e.target.parentElement.remove();
+                }
+            });
+            document.getElementById('alternatives-container').addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-btn')) {
+                    e.target.parentElement.remove();
+                }
+            });
+
+            addCriterionBtn.addEventListener('click', addCriterionRow);
+            addAlternativeBtn.addEventListener('click', addAlternativeRow);
+            startComparisonBtn.addEventListener('click', handleStartComparison);
+            calculateAhpBtn.addEventListener('click', handleCalculateAhp);
+
+            function addCriterionRow() {
+                const container = document.getElementById('criteria-container');
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                div.innerHTML = `
+                    <input type="text" placeholder="Nama Kriteria" class="w-full p-2 border rounded-md">
+                    <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                `;
+                container.appendChild(div);
+            }
+
+            function addAlternativeRow() {
+                const container = document.getElementById('alternatives-container');
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                div.innerHTML = `
+                    <input type="text" placeholder="Nama Alternatif" class="w-full p-2 border rounded-md">
+                    <button class="remove-btn text-red-500 hover:text-red-700 font-bold p-2">X</button>
+                `;
+                container.appendChild(div);
+            }
+
+            function generateAhpPairwiseTable(containerId, prefix, items, title) {
+                const container = document.getElementById(containerId);
+                let html = `
+                    <div class="calc-step">
+                        <h4 class="font-semibold text-lg">${title}</h4>
+                        <div id="ahp-matrix-container-${prefix}" class="overflow-x-auto mt-2">
+                `;
+                let table = `<table id="ahp-matrix-${prefix}" class="min-w-full border-collapse mt-2">
+                    <thead class="bg-gray-100"><tr><th class="py-2 px-4 border"></th>`;
+                items.forEach(item => table += `<th class="py-2 px-4 border">${item}</th>`);
+                table += `</tr></thead><tbody>`;
+                items.forEach((item, i) => {
+                    table += `<tr><td class="py-2 px-4 border font-semibold">${item}</td>`;
+                    items.forEach((_, j) => {
+                        const value = (i === j) ? '1' : '';
+                        const disabled = (i === j) ? 'disabled' : '';
+                        table += `<td class="p-1 border"><input type="number" step="any" class="table-input" value="${value}" ${disabled} data-prefix="${prefix}" data-row="${i}" data-col="${j}"></td>`;
+                    });
+                    table += `</tr>`;
+                });
+                table += `</tbody></table></div></div>`;
+                container.innerHTML += html;
+                
+                const tableElement = document.getElementById(`ahp-matrix-container-${prefix}`);
+                tableElement.innerHTML = table;
+                tableElement.addEventListener('change', handleAhpReciprocal);
+            }
+
+            function handleAhpReciprocal(e) {
+                if (e.target.tagName !== 'INPUT') return;
+                const { prefix, row, col } = e.target.dataset;
+                const value = parseFloat(e.target.value);
+                if (value > 0) {
+                    const reciprocalInput = document.querySelector(`input[data-prefix="${prefix}"][data-row="${col}"][data-col="${row}"]`);
+                    if(reciprocalInput) reciprocalInput.value = (1/value).toFixed(4);
+                }
+            }
+
+            function generateDetailedAhpTable(context, items, analysisResult) {
+                const { originalMatrix, weights, colSums, cr, lambdaMax, ci } = analysisResult;
+                let html = `
+                    <div class="calc-step">
+                        <h3 class="text-lg font-semibold mb-2">Pair Comparison Matrix (${context})</h3>
+                        <div class="overflow-x-auto mt-2">
+                            <table class="min-w-full border-collapse ahp-table">
+                                <thead>
+                                    <tr>
+                                        <th class="header-orange">${context}</th>
+                `;
+                items.forEach(item => html += `<th class="header-orange">${item}</th>`);
+                html += `<th class="vector-purple">Priority Vector</th></tr></thead><tbody>`;
+
+                items.forEach((item, i) => {
+                    html += `<tr><td class="header-orange font-semibold">${item}</td>`;
+                    originalMatrix[i].forEach(val => html += `<td class="data-green">${val.toFixed(2)}</td>`);
+                    html += `<td class="vector-purple font-semibold">${weights[i].toFixed(4)}</td></tr>`;
+                });
+
+                html += `</tbody><tfoot><tr class="font-bold"><td class="vector-purple">Jumlah</td>`;
+                colSums.forEach(sum => html += `<td class="vector-purple">${sum.toFixed(4)}</td>`);
+                html += `<td class="vector-purple">${weights.reduce((a,b) => a+b, 0).toFixed(4)}</td></tr></tfoot></table></div>`;
+
+                const crStatus = cr <= 0.1 ? '<span class="text-green-600 font-semibold">(Konsisten)</span>' : '<span class="text-red-600 font-semibold">(Tidak Konsisten)</span>';
+                html += `
+                    <div class="mt-4">
+                        <table class="summary-table text-sm w-full md:w-auto">
+                            <tr class="border-t"><td class="py-2"><strong>Principle Eigen Value (λmax)</strong></td><td class="py-2">=</td><td class="py-2">${lambdaMax.toFixed(4)}</td></tr>
+                            <tr class="border-t"><td class="py-2"><strong>Consistency Index (CI)</strong></td><td class="py-2">=</td><td class="py-2">${ci.toFixed(4)}</td></tr>
+                            <tr class="border-t border-b"><td class="py-2"><strong>Consistency Ratio (CR)</strong></td><td class="py-2">=</td><td class="py-2">${(cr * 100).toFixed(2)}% ${crStatus}</td></tr>
+                        </table>
+                    </div>
+                </div>`;
+                return html;
+            }
+
+            function handleStartComparison() {
+                appState.criteria = getItemsFromDOM('criteria-container');
+                appState.alternatives = getItemsFromDOM('alternatives-container');
+                
+                if (appState.criteria.length < 1 || appState.alternatives.length < 2) {
+                    alert('AHP memerlukan minimal 1 Kriteria dan 2 Alternatif.');
+                    return;
+                }
+
+                const comparisonContainer = document.getElementById('comparison-container');
+                comparisonContainer.innerHTML = ''; 
+                
+                appState.criteria.forEach((criterion, critIndex) => {
+                    const title = `Perbandingan untuk Kriteria: <span class="text-indigo-600">${criterion}</span>`;
+                    generateAhpPairwiseTable('comparison-container', `alt-${critIndex}`, appState.alternatives, title);
+                });
+
+                document.getElementById('step1-card').classList.add('hidden');
+                document.getElementById('step2-card').classList.remove('hidden');
+            }
+
+            function handleCalculateAhp() {
+                 try {
+                    const allResults = calculateAll();
+                    displayCalculationDetails(allResults);
+                    document.getElementById('step2-card').classList.add('hidden');
+                    document.getElementById('result-card').classList.remove('hidden');
+                } catch (error) {
+                     alert('Terjadi kesalahan: ' + error.message);
+                }
+            }
+
+            function getItemsFromDOM(containerId) {
+                return Array.from(document.getElementById(containerId).querySelectorAll('input[type="text"]'))
+                    .map(input => input.value)
+                    .filter(value => value.trim() !== '');
+            }
+
+            function getPairwiseMatrixFromDOM(prefix) {
+                const table = document.getElementById(`ahp-matrix-${prefix}`);
+                if (!table) throw new Error(`Tabel dengan prefix ${prefix} tidak ditemukan.`);
+                const rows = Array.from(table.querySelectorAll('tbody tr'));
+                const matrix = rows.map(row => Array.from(row.querySelectorAll('input')).map(input => parseFloat(input.value)));
+                if (matrix.flat().some(isNaN)) throw new Error(`Harap isi semua nilai pada matriks perbandingan untuk ${prefix}.`);
+                return matrix;
+            }
+
+            function getEigenvectorAndCR(matrix) {
+                const n = matrix.length;
+                if (n === 0) return { weights: [], cr: 0 };
+                
+                const colSums = matrix[0].map((_, j) => matrix.reduce((sum, row) => sum + row[j], 0));
+                if (colSums.some(s => s === 0)) throw new Error("Jumlah kolom pada matriks perbandingan tidak boleh nol.");
+
+                const normalized = matrix.map(row => row.map((val, j) => val / colSums[j]));
+                const weights = normalized.map(row => row.reduce((sum, val) => sum + val, 0) / n);
+                
+                const lambdaMax = colSums.reduce((sum, val, i) => sum + (val * weights[i]), 0);
+                const CI = n > 1 ? (lambdaMax - n) / (n - 1) : 0;
+                const RI_TABLE = [0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49];
+                const RI = RI_TABLE[n-1] || 1.51;
+                const CR = RI > 0 ? CI / RI : 0;
+
+                return { originalMatrix: matrix, weights, cr: CR, normalized, colSums, lambdaMax, ci: CI };
+            }
+
+            function calculateAll() {
+                const { criteria, alternatives } = appState;
+                const results = [];
+                
+                criteria.forEach((crit, i) => {
+                    const matrix = getPairwiseMatrixFromDOM(`alt-${i}`);
+                    const analysisResult = getEigenvectorAndCR(matrix);
+                    if (analysisResult.cr > 0.1) {
+                        alert(`Peringatan: Matriks untuk kriteria "${crit}" tidak konsisten (CR = ${analysisResult.cr.toFixed(4)}).`);
+                    }
+                    results.push({
+                        context: crit,
+                        items: alternatives,
+                        analysis: analysisResult
+                    });
+                });
+                return results;
+            }
+
+            function displayCalculationDetails(allResults) {
+                const container = document.getElementById('calculation-details-container');
+                let html = '';
+                allResults.forEach(result => {
+                    html += generateDetailedAhpTable(result.context, result.items, result.analysis);
+                });
+                container.innerHTML = html;
+            }
+
+        });
+    </script>
+</body>
+</html>

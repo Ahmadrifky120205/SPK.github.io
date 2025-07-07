@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Saintifik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Latar belakang gradien yang menarik */
+            background: linear-gradient(to bottom, #1a1a1a, #f39c12);
+        }
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        img{
+            height: 150px;
+            width: 200px;
+        }
+
+        .btn {
+            @apply w-full h-16 rounded-lg text-xl font-medium flex items-center justify-center transition-all duration-200 ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-num {
+            @apply bg-gray-700/50 text-white hover:bg-gray-600/60 active:bg-gray-500/60;
+        }
+        .btn-op {
+            @apply bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700;
+        }
+        .btn-func {
+            @apply bg-gray-600/50 text-white hover:bg-gray-500/60 active:bg-gray-400/60;
+        }
+        .btn-span-2 {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md mx-auto bg-black/30 backdrop-blur-xl rounded-2xl shadow-2xl p-6 border border-white/10">
+        <!-- Judul -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-white">Kalkulator Saintifik</h1>
+            <center><a href="../index.html"><img src="../1Sistem Pengambilan Keputusan.png" alt=""></a></center>
+        </div>
+        
+        <!-- Display -->
+        <div class="bg-black/40 rounded-lg p-4 mb-6 text-right break-words">
+            <div id="history" class="text-gray-400 text-sm h-6"></div>
+            <div id="display" class="text-white text-5xl font-bold h-14">0</div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="calculator-grid">
+            <!-- Scientific Functions -->
+            <button class="btn btn-func" data-value="sqrt">√</button>
+            <button class="btn btn-func" data-value="pow">xʸ</button>
+            <button class="btn btn-func" data-value="sin">sin</button>
+            <button class="btn btn-func" data-value="cos">cos</button>
+            <button class="btn btn-func" data-value="tan">tan</button>
+
+            <button class="btn btn-func" data-value="log">log</button>
+            <button class="btn btn-func" data-value="ln">ln</button>
+            <button class="btn btn-func" data-value="pi">π</button>
+            <button class="btn btn-func" data-value="e">e</button>
+            <button class="btn btn-func" data-value="deg">deg</button>
+            
+            <button class="btn btn-func" data-value="(">(</button>
+            <button class="btn btn-func" data-value=")">)</button>
+            <button class="btn btn-func" data-value="backspace">⌫</button>
+            <button class="btn btn-func" data-value="clear">AC</button>
+            <button class="btn btn-op" data-value="/">&divide;</button>
+
+            <!-- Numbers and Basic Operators -->
+            <button class="btn btn-num" data-value="7">7</button>
+            <button class="btn btn-num" data-value="8">8</button>
+            <button class="btn btn-num" data-value="9">9</button>
+            <button class="btn btn-op" data-value="*">&times;</button>
+            <button class="btn btn-op" data-value="-">&minus;</button>
+
+            <button class="btn btn-num" data-value="4">4</button>
+            <button class="btn btn-num" data-value="5">5</button>
+            <button class="btn btn-num" data-value="6">6</button>
+            <button class="btn btn-op" data-value="+">&plus;</button>
+            <button class="btn btn-op btn-span-2" data-value="=" style="height: auto; grid-row: span 2;">=</button>
+
+            <button class="btn btn-num" data-value="1">1</button>
+            <button class="btn btn-num" data-value="2">2</button>
+            <button class="btn btn-num" data-value="3">3</button>
+            
+            <button class="btn btn-num btn-span-2" data-value="0">0</button>
+            <button class="btn btn-num" data-value=".">.</button>
+        </div>
+    </div>
+
+    <div>
+         <audio autoplay loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+            </audio>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1E4uiamMtux6mN?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const display = document.getElementById('display');
+            const history = document.getElementById('history');
+            const buttons = document.querySelector('.calculator-grid');
+
+            let currentInput = '0';
+            let currentHistory = '';
+            let isRadian = true;
+
+            function updateDisplay() {
+                display.textContent = currentInput;
+                history.textContent = currentHistory;
+            }
+
+            function handleInput(value) {
+                if (currentInput === '0' || currentInput === 'Error') {
+                    currentInput = '';
+                }
+                currentInput += value;
+                updateDisplay();
+            }
+
+            function handleOperator(value) {
+                if (currentInput === 'Error' || (currentInput === '0' && value !== '-')) return;
+                const lastChar = currentInput.slice(-1);
+                if (['+', '-', '*', '/'].includes(lastChar)) {
+                    currentInput = currentInput.slice(0, -1);
+                }
+                currentInput += value;
+                updateDisplay();
+            }
+            
+            function handleFunction(func) {
+                if (currentInput === 'Error') return;
+                 if (currentInput === '0' && !['pi', 'e'].includes(func)) {
+                    currentInput = '';
+                }
+                switch(func) {
+                    case 'sqrt': currentInput += 'Math.sqrt('; break;
+                    case 'pow': currentInput += '**'; break;
+                    case 'sin': currentInput += 'Math.sin('; break;
+                    case 'cos': currentInput += 'Math.cos('; break;
+                    case 'tan': currentInput += 'Math.tan('; break;
+                    case 'log': currentInput += 'Math.log10('; break;
+                    case 'ln': currentInput += 'Math.log('; break;
+                    case 'pi': currentInput += 'Math.PI'; break;
+                    case 'e': currentInput += 'Math.E'; break;
+                    case 'deg': 
+                        isRadian = !isRadian;
+                        const degBtn = document.querySelector('[data-value="deg"]');
+                        degBtn.textContent = isRadian ? 'deg' : 'rad';
+                        degBtn.classList.toggle('bg-amber-500');
+                        degBtn.classList.toggle('bg-gray-600/50');
+                        break;
+                }
+                 updateDisplay();
+            }
+
+            function calculate() {
+                if (currentInput === 'Error' || currentInput === '') return;
+                try {
+                    currentHistory = currentInput.replace(/\*\*/g, '^').replace(/Math\.PI/g, 'π').replace(/Math\.E/g, 'e');
+                    
+                    let evalInput = currentInput.replace(/Math\.(sin|cos|tan)\(/g, (match, func) => {
+                        return `Math.${func}(${isRadian ? '' : 'Math.PI/180*'})`;
+                    });
+
+                    const result = eval(evalInput);
+                    if (Number.isNaN(result) || !Number.isFinite(result)) {
+                        throw new Error("Invalid calculation");
+                    }
+                    currentInput = String(result);
+                } catch (e) {
+                    currentInput = 'Error';
+                    currentHistory = '';
+                }
+                updateDisplay();
+            }
+
+            function clear() {
+                currentInput = '0';
+                currentHistory = '';
+                updateDisplay();
+            }
+
+            function backspace() {
+                if (currentInput === 'Error') {
+                    clear();
+                    return;
+                }
+                currentInput = currentInput.slice(0, -1);
+                if (currentInput === '') {
+                    currentInput = '0';
+                }
+                updateDisplay();
+            }
+
+            buttons.addEventListener('click', function(e) {
+                if (!e.target.matches('button')) return;
+
+                const value = e.target.dataset.value;
+                const btnClass = e.target.classList;
+
+                if (btnClass.contains('btn-num') || value === '(' || value === ')') {
+                    handleInput(value);
+                } else if (btnClass.contains('btn-op')) {
+                    if (value === '=') {
+                        calculate();
+                    } else {
+                        handleOperator(value);
+                    }
+                } else if (btnClass.contains('btn-func')) {
+                    if (value === 'clear') {
+                        clear();
+                    } else if (value === 'backspace') {
+                        backspace();
+                    } else {
+                        handleFunction(value);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
